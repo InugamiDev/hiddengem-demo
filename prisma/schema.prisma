@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model TripPlan {
+  id              String    @id @default(cuid())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  destination     String
+  startDate       DateTime
+  endDate         DateTime
+  budget          String    // "Low", "Medium", "High"
+  interests       String[]  // ["Culture", "Nature", "Food", "History"]
+  accommodation   String    // "Local Guesthouse", "Boutique Hotel", "Homestay", "Apartment"
+  transportation  String    // "Public Transit", "Walking", "Bike", "Local Driver"
+  mealType        String[]  // ["Street Food", "Local Markets", "Family Restaurants"]
+  activities      String[]  // Focus on local experiences
+  localPreferences Json?    // Detailed preferences for authentic experiences
+  vibeKeywords    String[]  // ["Peaceful", "Artistic", "Historic", "Foodie"]
+  avoidTouristy   Boolean   @default(true)
+  localAreas      String[]  // Specific neighborhood preferences
+  culturalInterests String[] // ["Traditional Arts", "Local Festivals", "Daily Life"]
+  dietaryNeeds    String[]  // For finding authentic food matching restrictions
+  userId          String?   // Optional for future auth integration
+}
+
+model LocalInsight {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  city        String
+  area        String   // Specific neighborhood or district
+  type        String   // "Food", "Activity", "Culture", "Nature"
+  name        String
+  description String   @db.Text
+  insiderTip  String?  @db.Text
+  bestTime    String?  // When to visit for best experience
+  priceRange  String   // Actual local price ranges
+  coordinates Json?    // Location data
+  tags        String[]
+  verified    Boolean  @default(false) // Verified by locals
+}

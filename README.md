@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HiddenGem Demo
 
-## Getting Started
+An AI-powered travel assistant application built with Next.js and TypeScript that helps travelers discover authentic local experiences. This project is participating in the APAC Hackathon Solution Challenge by Google Developer Group.
 
-First, run the development server:
+## Core Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### AI Travel Assistant (Nova)
+- Powered by Google's Gemini AI model
+- Focuses on discovering hidden gems and authentic local experiences
+- Interactive chat interface with guided conversation flow
+- Provides detailed recommendations with insider tips
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technical Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Frontend**: Next.js 15.3.1 with TypeScript
+- **Database**: PostgreSQL with Prisma ORM
+- **AI**: Google Gemini 2.0 Flash model
+- **UI**: TailwindCSS with Radix UI components
+- **Maps**: Leaflet for location visualization
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Data Models
 
-## Learn More
+### TripPlan
+- Stores comprehensive trip details including destination, dates, preferences
+- Tracks user preferences for accommodation, transportation, activities
+- Supports detailed local experience preferences
 
-To learn more about Next.js, take a look at the following resources:
+### LocalInsight
+- Stores curated local recommendations
+- Includes detailed information about locations, insider tips
+- Supports verification system for authentic local spots
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Key Components
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Chat System
+- Real-time chat interface with AI
+- Structured response format with follow-up questions
+- Supports rich data display including maps and local insights
 
-## Deploy on Vercel
+### Map Integration
+- Displays recommended locations
+- Provides detailed location information
+- Interactive markers for local insights
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+HiddenGem Demo is designed to help travelers discover authentic local experiences by combining AI assistance with curated local knowledge, focusing on non-touristy spots and genuine cultural experiences.
