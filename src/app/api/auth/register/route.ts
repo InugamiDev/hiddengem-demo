@@ -13,7 +13,6 @@ export async function POST(req: Request) {
       )
     }
 
-    // Check if user already exists
     const existingUser = await prisma.user.findUnique({
       where: { username }
     })
@@ -25,10 +24,8 @@ export async function POST(req: Request) {
       )
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    // Create user
     const user = await prisma.user.create({
       data: {
         username,
@@ -36,7 +33,6 @@ export async function POST(req: Request) {
       }
     })
 
-    // Remove password from response
     const { password: _, ...userWithoutPassword } = user
 
     return NextResponse.json(userWithoutPassword)

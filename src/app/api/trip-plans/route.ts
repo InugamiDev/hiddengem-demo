@@ -16,7 +16,6 @@ export async function POST(req: Request) {
 
     const data = await req.json()
     
-    // Extract relevant fields from formData and ensure required dates
     const tripPlan = await prisma.tripPlan.create({
       data: {
         destination: data.destination || "Unknown",

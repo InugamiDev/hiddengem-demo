@@ -23,7 +23,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Check if user is already logged in
     const checkAuth = async () => {
       try {
         const response = await fetch("/api/auth/check")

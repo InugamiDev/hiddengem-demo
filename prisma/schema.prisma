@@ -23,46 +23,47 @@ model TripPlan {
   destination     String
   startDate       DateTime
   endDate         DateTime
-  budget          String    // "Low", "Medium", "High"
-  interests       String[]  // ["Culture", "Nature", "Food", "History"]
-  accommodation   String    // "Local Guesthouse", "Boutique Hotel", "Homestay", "Apartment"
-  transportation  String    // "Public Transit", "Walking", "Bike", "Local Driver"
-  mealType        String[]  // ["Street Food", "Local Markets", "Family Restaurants"]
-  activities      String[]  // Focus on local experiences
-  localPreferences Json?    // Detailed preferences for authentic experiences
-  vibeKeywords    String[]  // ["Peaceful", "Artistic", "Historic", "Foodie"]
+  budget          String
+  interests       String[]
+  accommodation   String
+  transportation  String
+  mealType        String[]
+  activities      String[]
+  localPreferences Json?
+  vibeKeywords    String[]
   avoidTouristy   Boolean   @default(true)
-  localAreas      String[]  // Specific neighborhood preferences
-  culturalInterests String[] // ["Traditional Arts", "Local Festivals", "Daily Life"]
-  dietaryNeeds    String[]  // For finding authentic food matching restrictions
+  localAreas      String[]
+  culturalInterests String[]
+  dietaryNeeds    String[]
   user            User?     @relation(fields: [userId], references: [id])
-  userId          String?   // Optional for anonymous users
+  userId          String?
 }
 
 model SavedLocation {
   id          String   @id @default(cuid())
   createdAt   DateTime @default(now())
   name        String
-  type        String   // café, temple, park, etc.
+  type        String
   insiderTip  String?  @db.Text
-  coordinates Json     // {lat: number, lng: number}
+  coordinates Json
   user        User     @relation(fields: [userId], references: [id])
   userId      String
 }
 
 model LocalInsight {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  city        String
-  area        String   // Specific neighborhood or district
-  type        String   // "Food", "Activity", "Culture", "Nature"
+  id          String   @id @default(uuid())
   name        String
   description String   @db.Text
-  insiderTip  String?  @db.Text
-  bestTime    String?  // When to visit for best experience
-  priceRange  String   // Actual local price ranges
-  coordinates Json?    // Location data
+  type        String
+  city        String
+  country     String   @db.Text
+  area        String?  @db.Text
+  latitude    Float
+  longitude   Float
   tags        String[]
-  verified    Boolean  @default(false) // Verified by locals
+  imageUrl    String?
+  priceRange  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  verified    Boolean  @default(false)
 }

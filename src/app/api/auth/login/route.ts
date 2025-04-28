@@ -14,7 +14,6 @@ export async function POST(req: Request) {
       )
     }
 
-    // Find user
     const user = await prisma.user.findUnique({
       where: { username }
     })
@@ -26,7 +25,6 @@ export async function POST(req: Request) {
       )
     }
 
-    // Check password
     const passwordMatch = await bcrypt.compare(password, user.password)
 
     if (!passwordMatch) {
@@ -36,7 +34,6 @@ export async function POST(req: Request) {
       )
     }
 
-    // Set auth cookie
     const response = NextResponse.json({
       id: user.id,
       username: user.username,
@@ -47,7 +44,7 @@ export async function POST(req: Request) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 60 * 60 * 24 * 7 // 7 days
+      maxAge: 60 * 60 * 24 * 7
     })
 
     return response

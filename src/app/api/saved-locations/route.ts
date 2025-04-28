@@ -29,7 +29,6 @@ export async function POST(req: Request) {
 
     const data = await req.json()
     
-    // Validate input data
     const validationResult = createLocationSchema.safeParse(data)
     if (!validationResult.success) {
       return NextResponse.json(
@@ -60,7 +59,6 @@ export async function POST(req: Request) {
   }
 }
 
-// Get all saved locations for the current user
 export async function GET() {
   try {
     const cookieStore = await cookies()
@@ -80,7 +78,6 @@ export async function GET() {
       orderBy: {
         createdAt: "desc"
       },
-      // Remove the OFFSET as we want all locations
     })
 
     return NextResponse.json(savedLocations)
@@ -93,7 +90,6 @@ export async function GET() {
   }
 }
 
-// Delete a saved location
 export async function DELETE(req: Request) {
   try {
     const cookieStore = await cookies()
@@ -116,7 +112,6 @@ export async function DELETE(req: Request) {
       )
     }
 
-    // Check if location exists and belongs to user
     const location = await prisma.savedLocation.findFirst({
       where: {
         id: locationId,
@@ -131,7 +126,6 @@ export async function DELETE(req: Request) {
       )
     }
 
-    // Delete the location
     await prisma.savedLocation.delete({
       where: {
         id: locationId

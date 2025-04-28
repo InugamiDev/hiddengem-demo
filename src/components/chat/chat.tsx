@@ -88,18 +88,15 @@ export function Chat() {
   const { user } = useAuth();
 
   useEffect(() => {
-    // Scroll to bottom when messages change
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
 
   const handleSendMessage = async (message: string) => {
-    // Add user message
     setMessages((prev) => [...prev, { message, isUser: true }]);
 
     try {
-      // Call API endpoint for AI response
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
@@ -114,9 +111,7 @@ export function Chat() {
 
       const data = await response.json();
 
-      // Update form data with any new information
       if (data.formData || data.functionCall) {
-        // If user is not authenticated and we've gathered enough trip data, show auth dialog
         if (!user && shouldPromptAuth(data.formData)) {
           setShowAuthDialog(true);
         }
@@ -128,7 +123,6 @@ export function Chat() {
         }));
       }
 
-      // Add AI response
       const newMessage = {
         message: data.response,
         isUser: false,
@@ -148,7 +142,6 @@ export function Chat() {
     }
   };
 
-  // Check if we have enough trip data to prompt for auth
   const shouldPromptAuth = (newData: Partial<TripPlanFormData>) => {
     const data = { ...formData, ...newData };
     return !!(data.destination && (data.interests?.length || data.activities?.length));

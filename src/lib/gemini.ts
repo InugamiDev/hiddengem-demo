@@ -50,20 +50,17 @@ Your responses must be in pure JSON format (no markdown or code blocks) followin
     ]
   },
   "formData": {
-    // Basic trip details (always provide when available)
     "destination": "City name",
     "startDate": "YYYY-MM-DD",
     "endDate": "YYYY-MM-DD",
     "budget": "Low/Medium/High",
 
-    // Travel preferences (always provide when discussing preferences)
     "accommodation": "Local Guesthouse/Boutique Hotel/Homestay/Apartment",
     "transportation": "Public Transit/Walking/Bike/Local Driver",
     "mealType": ["Street Food", "Local Markets", "Family Restaurants"],
     "interests": ["Culture", "Nature", "Food", "History"],
     "activities": ["Specific local activity 1", "Specific local activity 2"],
 
-    // Local experience preferences (provide when discussing local experiences)
     "avoidTouristy": true,
     "localAreas": ["Neighborhood 1", "District 2"],
     "culturalInterests": ["Traditional Arts", "Local Festivals", "Daily Life"],
@@ -71,7 +68,6 @@ Your responses must be in pure JSON format (no markdown or code blocks) followin
     "dietaryNeeds": ["Vegetarian", "Local specialties"]
   },
 
-  // Always include this when mentioning locations
   "functionCall": {
     "type": "map",
     "data": {
