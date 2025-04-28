@@ -8,17 +8,7 @@ import { useAuth } from "@/contexts/auth-context";
 import { Input } from "@/components/ui/input";
 
 const MapIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" />
     <line x1="9" y1="3" x2="9" y2="18" />
     <line x1="15" y1="6" x2="15" y2="21" />
@@ -26,34 +16,14 @@ const MapIcon = () => (
 );
 
 const SearchIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="11" cy="11" r="8" />
     <line x1="21" y1="21" x2="16.65" y2="16.65" />
   </svg>
 );
 
 const SaveIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
     <polyline points="17 21 17 13 7 13 7 21" />
     <polyline points="7 3 7 8 15 8" />
@@ -129,11 +99,8 @@ export function InfoPanel({ formData }: InfoPanelProps) {
   const fetchSavedLocations = async () => {
     try {
       const response = await fetch("/api/saved-locations");
-      if (!response.ok) {
-        throw new Error("Failed to fetch saved locations");
-      }
+      if (!response.ok) throw new Error("Failed to fetch saved locations");
       const data = await response.json();
-      console.log("Fetched locations:", data);
       setSavedLocations(data);
     } catch (error) {
       console.error("Error fetching saved locations:", error);
@@ -144,13 +111,9 @@ export function InfoPanel({ formData }: InfoPanelProps) {
   const handleSaveLocation = async (location: any) => {
     try {
       setIsLoading(true);
-      console.log("Saving location data:", location);
-
       const coordinates = Array.isArray(location.coordinates) 
         ? { lat: location.coordinates[0], lng: location.coordinates[1] }
         : location.coordinates;
-
-      console.log("Formatted coordinates:", coordinates);
 
       const response = await fetch("/api/saved-locations", {
         method: "POST",
@@ -164,10 +127,7 @@ export function InfoPanel({ formData }: InfoPanelProps) {
       });
 
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to save location");
-      }
+      if (!response.ok) throw new Error(data.error || "Failed to save location");
 
       alert("Location saved successfully");
       await fetchSavedLocations();
@@ -187,10 +147,7 @@ export function InfoPanel({ formData }: InfoPanelProps) {
         method: "DELETE",
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to delete location");
-      }
-
+      if (!response.ok) throw new Error("Failed to delete location");
       alert("Location deleted successfully");
       await fetchSavedLocations();
     } catch (error) {
@@ -220,10 +177,7 @@ export function InfoPanel({ formData }: InfoPanelProps) {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to save trip plan");
-      }
-      
+      if (!response.ok) throw new Error("Failed to save trip plan");
       alert("Trip plan saved successfully");
     } catch (error) {
       console.error("Error saving trip plan:", error);
@@ -245,24 +199,24 @@ export function InfoPanel({ formData }: InfoPanelProps) {
   };
 
   return (
-    <div className="h-[calc(100vh-7rem)] p-4 space-y-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300">
+    <div className="h-[calc(100vh-7rem)] p-2 sm:p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300">
       {!hasFormData ? (
-        <Card className="p-4">
-          <p className="text-muted-foreground">
+        <Card className="p-3 sm:p-4">
+          <p className="text-muted-foreground text-sm sm:text-base">
             Start chatting to plan your trip. I&apos;ll help you discover authentic local experiences!
           </p>
         </Card>
       ) : (
-        <>
-          <Card className="p-4">
-            <div className="flex justify-between items-center mb-3">
-              <h2 className="text-lg font-semibold">Basic Trip Info</h2>
+        <div className="grid gap-3 sm:gap-4">
+          <Card className="p-3 sm:p-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3">
+              <h2 className="text-base sm:text-lg font-semibold">Basic Trip Info</h2>
               {user && (
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={saveTripPlan}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 w-full sm:w-auto text-sm"
                 >
                   <SaveIcon />
                   Save Trip
@@ -274,9 +228,9 @@ export function InfoPanel({ formData }: InfoPanelProps) {
                 const value = formData[key as keyof typeof formData];
                 if (!value) return null;
                 return (
-                  <div key={key} className="flex justify-between items-center">
+                  <div key={key} className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
                     <span className="font-medium text-sm">{formatKey(key)}</span>
-                    <span className="text-muted-foreground">{formatValue(value)}</span>
+                    <span className="text-muted-foreground text-sm break-words sm:text-right">{formatValue(value)}</span>
                   </div>
                 );
               })}
@@ -284,65 +238,71 @@ export function InfoPanel({ formData }: InfoPanelProps) {
           </Card>
 
           {user && (
-            <Card className="p-4">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Saved Locations</h2>
+            <Card className="p-3 sm:p-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3 sm:mb-4">
+                <h2 className="text-base sm:text-lg font-semibold">Saved Locations</h2>
                 <Button 
-                  variant="outline" 
+                  variant="outline"
                   size="sm"
                   onClick={() => setShowSavedLocations(!showSavedLocations)}
+                  className="w-full sm:w-auto text-sm"
                 >
                   {showSavedLocations ? "Hide" : "Show"}
                 </Button>
               </div>
               
               {showSavedLocations && (
-                <>
-                  <div className="mb-4 flex gap-2">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Input
                       placeholder="Location name"
                       value={newLocationName}
                       onChange={e => setNewLocationName(e.target.value)}
+                      className="flex-1 text-sm"
                     />
                     <Button 
                       variant="outline"
                       disabled={!newLocationName || isLoading}
                       onClick={() => setNewLocationName("")}
+                      className="w-full sm:w-auto text-sm"
                     >
                       Clear
                     </Button>
                   </div>
 
-                  <MapView
-                    center={
-                      savedLocations.length > 0 
-                        ? [savedLocations[0].coordinates.lat, savedLocations[0].coordinates.lng]
-                        : [0, 0]
-                    }
-                    markers={savedLocations.map(loc => ({
-                      id: loc.id,
-                      position: [loc.coordinates.lat, loc.coordinates.lng],
-                      title: loc.name,
-                      description: `${loc.type}${loc.insiderTip ? ` - ${loc.insiderTip}` : ''}`
-                    }))}
-                    isEditable={true}
-                    onLocationSave={handleNewLocation}
-                    onMarkerDelete={handleDeleteLocation}
-                  />
+                  <div className="h-[250px] sm:h-[400px] rounded-lg overflow-hidden">
+                    <MapView
+                      center={
+                        savedLocations.length > 0 
+                          ? [savedLocations[0].coordinates.lat, savedLocations[0].coordinates.lng]
+                          : [0, 0]
+                      }
+                      markers={savedLocations.map(loc => ({
+                        id: loc.id,
+                        position: [loc.coordinates.lat, loc.coordinates.lng],
+                        title: loc.name,
+                        description: `${loc.type}${loc.insiderTip ? ` - ${loc.insiderTip}` : ''}`
+                      }))}
+                      isEditable={true}
+                      onLocationSave={handleNewLocation}
+                      onMarkerDelete={handleDeleteLocation}
+                    />
+                  </div>
 
                   {savedLocations.length > 0 && (
-                    <div className="mt-4 space-y-2">
+                    <div className="grid gap-2">
                       {savedLocations.map(location => (
-                        <div key={location.id} className="flex justify-between items-center p-2 bg-muted rounded-lg">
-                          <div>
-                            <h3 className="font-medium">{location.name}</h3>
-                            <p className="text-sm text-muted-foreground">{location.type}</p>
+                        <div key={location.id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 p-2 bg-muted rounded-lg">
+                          <div className="w-full sm:w-auto">
+                            <h3 className="font-medium text-sm">{location.name}</h3>
+                            <p className="text-xs text-muted-foreground">{location.type}</p>
                           </div>
                           <Button 
-                            variant="destructive" 
+                            variant="destructive"
                             size="sm"
                             disabled={isLoading}
                             onClick={() => handleDeleteLocation(location.id)}
+                            className="w-full sm:w-auto text-sm"
                           >
                             Delete
                           </Button>
@@ -350,33 +310,33 @@ export function InfoPanel({ formData }: InfoPanelProps) {
                       ))}
                     </div>
                   )}
-                </>
+                </div>
               )}
             </Card>
           )}
 
           {formData.functionCall?.data?.suggestions && (
-            <Card className="p-4">
-              <h2 className="text-lg font-semibold mb-3">Suggested Places</h2>
-              <div className="space-y-4">
+            <Card className="p-3 sm:p-4">
+              <h2 className="text-base sm:text-lg font-semibold mb-3">Suggested Places</h2>
+              <div className="grid gap-3 sm:gap-4">
                 {formData.functionCall.data.suggestions.map((suggestion, index) => (
                   <div key={index} className="space-y-2 pb-3 border-b last:border-0 last:pb-0">
-                    <div className="flex justify-between items-start gap-2">
-                      <div>
-                        <h3 className="font-medium">{suggestion.title}</h3>
-                        <p className="text-sm text-muted-foreground mt-1">{suggestion.address}</p>
+                    <div className="flex flex-col sm:flex-row justify-between items-start gap-2">
+                      <div className="w-full sm:w-auto">
+                        <h3 className="font-medium text-sm">{suggestion.title}</h3>
+                        <p className="text-xs text-muted-foreground mt-1">{suggestion.address}</p>
                       </div>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 w-full sm:w-auto">
                         <button
                           onClick={() => window.open(`https://www.google.com/maps?q=${suggestion.coordinates[0]},${suggestion.coordinates[1]}`, '_blank')}
-                          className="bg-primary text-primary-foreground p-2 rounded hover:bg-primary/90"
+                          className="bg-primary text-primary-foreground p-2 rounded hover:bg-primary/90 flex-1 sm:flex-none"
                           title="View on Map"
                         >
                           <MapIcon />
                         </button>
                         <button
                           onClick={() => window.open(`https://www.google.com/search?q=${encodeURIComponent(suggestion.title)}`, '_blank')}
-                          className="bg-primary text-primary-foreground p-2 rounded hover:bg-primary/90"
+                          className="bg-primary text-primary-foreground p-2 rounded hover:bg-primary/90 flex-1 sm:flex-none"
                           title="Search on Google"
                         >
                           <SearchIcon />
@@ -384,7 +344,7 @@ export function InfoPanel({ formData }: InfoPanelProps) {
                         {user && (
                           <button
                             onClick={() => handleSaveLocation(suggestion)}
-                            className="bg-primary text-primary-foreground p-2 rounded hover:bg-primary/90"
+                            className="bg-primary text-primary-foreground p-2 rounded hover:bg-primary/90 flex-1 sm:flex-none"
                             title="Save Location"
                           >
                             <SaveIcon />
@@ -392,8 +352,8 @@ export function InfoPanel({ formData }: InfoPanelProps) {
                         )}
                       </div>
                     </div>
-                    <p className="text-sm text-muted-foreground">{suggestion.description}</p>
-                    <div className="flex gap-2 text-xs text-muted-foreground">
+                    <p className="text-xs sm:text-sm text-muted-foreground">{suggestion.description}</p>
+                    <div className="flex flex-wrap gap-1 sm:gap-2 text-xs">
                       <span className="bg-secondary px-2 py-1 rounded">{suggestion.area}</span>
                       <span className="bg-secondary px-2 py-1 rounded">{suggestion.type}</span>
                     </div>
@@ -409,21 +369,23 @@ export function InfoPanel({ formData }: InfoPanelProps) {
           )}
 
           {formData.destination && formData.functionCall?.type === "map" && formData.functionCall.data?.coordinates && (
-            <Card className="p-4">
-              <h2 className="text-lg font-semibold mb-4">Location</h2>
-              <MapView
-                center={formData.functionCall.data?.coordinates || [0, 0]}
-                markers={[
-                  {
-                    position: formData.functionCall.data?.coordinates || [0, 0],
-                    title: formData.destination,
-                    description: formData.functionCall.data?.description
-                  }
-                ]}
-              />
+            <Card className="p-3 sm:p-4">
+              <h2 className="text-base sm:text-lg font-semibold mb-3">Location</h2>
+              <div className="h-[250px] sm:h-[400px] rounded-lg overflow-hidden">
+                <MapView
+                  center={formData.functionCall.data?.coordinates || [0, 0]}
+                  markers={[
+                    {
+                      position: formData.functionCall.data?.coordinates || [0, 0],
+                      title: formData.destination,
+                      description: formData.functionCall.data?.description
+                    }
+                  ]}
+                />
+              </div>
             </Card>
           )}
-        </>
+        </div>
       )}
     </div>
   );
