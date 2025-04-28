@@ -7,6 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id            String          @id @default(cuid())
+  createdAt     DateTime        @default(now())
+  username      String          @unique
+  password      String
+  tripPlans     TripPlan[]
+  savedLocations SavedLocation[]
+}
+
 model TripPlan {
   id              String    @id @default(cuid())
   createdAt       DateTime  @default(now())
@@ -26,7 +35,19 @@ model TripPlan {
   localAreas      String[]  // Specific neighborhood preferences
   culturalInterests String[] // ["Traditional Arts", "Local Festivals", "Daily Life"]
   dietaryNeeds    String[]  // For finding authentic food matching restrictions
-  userId          String?   // Optional for future auth integration
+  user            User?     @relation(fields: [userId], references: [id])
+  userId          String?   // Optional for anonymous users
+}
+
+model SavedLocation {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  name        String
+  type        String   // café, temple, park, etc.
+  insiderTip  String?  @db.Text
+  coordinates Json     // {lat: number, lng: number}
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
 }
 
 model LocalInsight {

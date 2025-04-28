@@ -75,27 +75,6 @@ export function ChatMessage({ message, isUser, nextQuestion, onOptionSelect, fun
           </div>
         )}
 
-        {functionCall?.type === "map" && functionCall.data?.suggestions && (
-          <div className="grid grid-cols-1 gap-4 mt-4">
-            {functionCall.data.suggestions.map((item, index) => (
-              <LocalInsightCard
-                key={index}
-                title={item.title}
-                description={item.description}
-                address={item.address}
-                imageUrl={item.imageUrl}
-                insiderTip={item.insiderTip}
-                bestTime={item.bestTime}
-                priceRange={item.priceRange}
-                area={item.area || functionCall.data?.region || ""}
-                tags={[item.type, ...(item.tags || [])].filter(Boolean)}
-                coordinates={item.coordinates}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Map is now included in each suggestion card */}
       </div>
     </div>
   );

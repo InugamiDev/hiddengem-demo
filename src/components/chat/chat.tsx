@@ -5,6 +5,8 @@ import { nanoid } from "nanoid";
 import { ChatInput } from "./chat-input";
 import { ChatMessage } from "./chat-message";
 import { InfoPanel } from "../panel/info-panel";
+import { useAuth } from "@/contexts/auth-context";
+import { AuthDialog } from "../auth/auth-dialog";
 
 type Message = {
   message: string;
@@ -80,8 +82,10 @@ export function Chat() {
     },
   ]);
   const [formData, setFormData] = useState<TripPlanFormData>({});
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
   const sessionIdRef = useRef(nanoid());
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     // Scroll to bottom when messages change
@@ -112,6 +116,11 @@ export function Chat() {
 
       // Update form data with any new information
       if (data.formData || data.functionCall) {
+        // If user is not authenticated and we've gathered enough trip data, show auth dialog
+        if (!user && shouldPromptAuth(data.formData)) {
+          setShowAuthDialog(true);
+        }
+
         setFormData((prev) => ({
           ...prev,
           ...data.formData,
@@ -139,37 +148,52 @@ export function Chat() {
     }
   };
 
+  // Check if we have enough trip data to prompt for auth
+  const shouldPromptAuth = (newData: Partial<TripPlanFormData>) => {
+    const data = { ...formData, ...newData };
+    return !!(data.destination && (data.interests?.length || data.activities?.length));
+  };
+
   return (
-    <div className="flex h-[calc(100vh-7rem)] max-w-screen mx-auto gap-4">
-      <div className="flex flex-col w-1/2">
-        <div
-          ref={chatContainerRef}
-          className="flex-1 overflow-y-auto space-y-4 mb-4 p-4 scrollbar-thin scrollbar-thumb-gray-300"
-        >
-          {messages.map((msg, index) => (
-            <ChatMessage
-              key={index}
-              {...msg}
-              nextQuestion={msg.nextQuestion && {
-                ...msg.nextQuestion,
-                selectedOption: messages[index + 1]?.message
-              }}
-              onOptionSelect={(option) => {
-                handleSendMessage(option);
-              }}
+    <div className="w-full max-w-7xl mx-auto">
+      <div className="flex h-[calc(100vh-4rem)] gap-4 p-4">
+        <div className="flex flex-col w-1/2">
+          <div
+            ref={chatContainerRef}
+            className="flex-1 overflow-y-auto space-y-4 mb-4 p-4 scrollbar-thin scrollbar-thumb-gray-300 border rounded-lg"
+          >
+            {messages.map((msg, index) => (
+              <ChatMessage
+                key={index}
+                {...msg}
+                nextQuestion={msg.nextQuestion && {
+                  ...msg.nextQuestion,
+                  selectedOption: messages[index + 1]?.message
+                }}
+                onOptionSelect={(option) => {
+                  handleSendMessage(option);
+                }}
+              />
+            ))}
+          </div>
+          <div className="sticky bottom-0 bg-background p-4 border rounded-lg">
+            <ChatInput
+              onSend={handleSendMessage}
+              placeholder={"Type your message..."}
             />
-          ))}
+          </div>
         </div>
-        <div className="sticky bottom-0 bg-background p-4">
-          <ChatInput
-            onSend={handleSendMessage}
-            placeholder={"Type your message..."}
-          />
+        <div className="w-1/2 border rounded-lg">
+          <InfoPanel formData={formData} />
         </div>
       </div>
-      <div className="w-1/2 border-l">
-        <InfoPanel formData={formData} />
-      </div>
+
+      {showAuthDialog && !user && (
+        <AuthDialog 
+          defaultMode="register"
+          onClose={() => setShowAuthDialog(false)}
+        />
+      )}
     </div>
   );
 }
