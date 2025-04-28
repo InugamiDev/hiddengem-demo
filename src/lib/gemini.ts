@@ -216,10 +216,42 @@ When discussing trip preferences (after knowing destination):
   }
 }`;
 
+type TripFormData = {
+  destination?: string;
+  startDate?: string;
+  endDate?: string;
+  budget?: "Low" | "Medium" | "High";
+  accommodation?: string;
+  transportation?: string;
+  mealType?: string[];
+  interests?: string[];
+  activities?: string[];
+  avoidTouristy?: boolean;
+  localAreas?: string[];
+  culturalInterests?: string[];
+  vibeKeywords?: string[];
+  dietaryNeeds?: string[];
+  functionCall?: {
+    type: "map";
+    data?: {
+      coordinates: [number, number];
+      description: string;
+      suggestions: Array<{
+        title: string;
+        description: string;
+        address: string;
+        area: string;
+        type: string;
+        coordinates: [number, number];
+        insiderTip?: string;
+      }>;
+    };
+  };
+};
+
 export async function generateTravelResponse(
   message: string,
-  formData: any,
-  chatHistory: { role: "user" | "assistant"; content: string }[]
+  formData: TripFormData
 ) {
   const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 

@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
 import { generateTravelResponse } from "@/lib/gemini";
 
 const chatHistories: Record<string, Array<{ role: "user" | "assistant"; content: string }>> = {};
@@ -19,8 +18,7 @@ export async function POST(req: NextRequest) {
 
     const aiResponse = await generateTravelResponse(
       message,
-      formData,
-      chatHistories[sessionId]
+      formData
     );
 
     chatHistories[sessionId].push({

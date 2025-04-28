@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import "leaflet/dist/leaflet.css";
+import type { Icon, LatLngExpression } from "leaflet";
+import type { MapContainerProps } from "react-leaflet";
 
 // Dynamically import react-leaflet components
 const MapContainer = dynamic(
@@ -27,18 +29,17 @@ const Popup = dynamic(
 
 
 type MapViewProps = {
-  location: string;
-  center: [number, number];
+  center: LatLngExpression;
   markers?: Array<{
-    position: [number, number];
+    position: LatLngExpression;
     title: string;
     description?: string;
   }>;
 };
 
-export function MapView({ location, center, markers = [] }: MapViewProps) {
+export function MapView({ center, markers = [] }: MapViewProps) {
   const [isClient, setIsClient] = useState(false);
-  const [mapIcon, setMapIcon] = useState<any>(null);
+  const [mapIcon, setMapIcon] = useState<Icon | null>(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -73,6 +74,7 @@ export function MapView({ location, center, markers = [] }: MapViewProps) {
         zoom={13}
         scrollWheelZoom={false}
         style={{ height: "100%", width: "100%" }}
+        {...({} as MapContainerProps)}
       >
         <TileLayer
           attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

@@ -1,5 +1,4 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { MapView } from "@/components/map/map-view";
 import { LocalInsightCard } from "@/components/trip/local-insight-card";
 
 type ChatMessageProps = {
@@ -16,6 +15,7 @@ type ChatMessageProps = {
     data?: {
       coordinates: [number, number];
       description: string;
+      region?: string;
       suggestions: Array<{
         title: string;
         description: string;
@@ -27,24 +27,12 @@ type ChatMessageProps = {
         imageUrl?: string;
         bestTime?: string;
         priceRange?: string;
+        tags?: string[];
       }>;
     };
   };
 };
 
-// Default coordinates for less touristy areas in major cities
-const LOCAL_AREAS: Record<string, [number, number]> = {
-  "Tokyo": {
-    "Shimokitazawa": [35.661382, 139.667083],
-    "Koenji": [35.705478, 139.649660],
-    "Yanaka": [35.721744, 139.770850],
-  },
-  "Kyoto": {
-    "Fushimi": [34.936235, 135.748395],
-    "Arashiyama Backstreets": [35.017249, 135.677222],
-    "Demachi Masugata": [35.030706, 135.768192],
-  },
-};
 
 export function ChatMessage({ message, isUser, nextQuestion, onOptionSelect, functionCall }: ChatMessageProps) {
   return (
@@ -77,7 +65,7 @@ export function ChatMessage({ message, isUser, nextQuestion, onOptionSelect, fun
                           : "bg-secondary hover:bg-secondary/80 underline decoration-2 underline-offset-4"
                       }
                     `}
-                    disabled={isDisabled}
+                    disabled={isDisabled || false}
                   >
                     {option}
                   </button>

@@ -45,7 +45,7 @@ type TripPlanFormData = {
   transportation?: string;
   mealType?: string[];
   activities?: string[];
-  localPreferences?: Record<string, any>;
+  localPreferences?: Record<string, string | number | boolean>;
   vibeKeywords?: string[];
   avoidTouristy?: boolean;
   localAreas?: string[];
@@ -80,7 +80,6 @@ export function Chat() {
     },
   ]);
   const [formData, setFormData] = useState<TripPlanFormData>({});
-  const [showingOptions, setShowingOptions] = useState(false);
   const sessionIdRef = useRef(nanoid());
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -128,7 +127,6 @@ export function Chat() {
         functionCall: data.functionCall,
       };
       setMessages((prev) => [...prev, newMessage]);
-      setShowingOptions(!!data.nextQuestion);
     } catch (error) {
       console.error("Error sending message:", error);
       setMessages((prev) => [
@@ -157,7 +155,6 @@ export function Chat() {
                 selectedOption: messages[index + 1]?.message
               }}
               onOptionSelect={(option) => {
-                setShowingOptions(false);
                 handleSendMessage(option);
               }}
             />

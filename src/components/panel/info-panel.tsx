@@ -49,7 +49,7 @@ type InfoPanelProps = {
     transportation?: string;
     mealType?: string[];
     activities?: string[];
-    localPreferences?: Record<string, any>;
+    localPreferences?: Record<string, string | number | boolean>;
     vibeKeywords?: string[];
     avoidTouristy?: boolean;
     localAreas?: string[];
@@ -89,12 +89,12 @@ export function InfoPanel({ formData }: InfoPanelProps) {
   // Local experience fields
   const localExp = ["avoidTouristy", "localAreas", "culturalInterests", "dietaryNeeds"];
 
-  const formatValue = (value: any): string => {
+  const formatValue = (value: unknown): string => {
     if (!value) return '';
     if (value instanceof Date) return new Date(value).toLocaleDateString();
     if (Array.isArray(value)) return value.join(", ");
     if (typeof value === "boolean") return value ? "Yes" : "No";
-    if (typeof value === "object") return '';
+    if (typeof value === "object") return '';  // Skip complex objects
     return String(value);
   };
 
@@ -107,7 +107,7 @@ export function InfoPanel({ formData }: InfoPanelProps) {
       {!hasFormData ? (
         <Card className="p-4">
           <p className="text-muted-foreground">
-            Start chatting to plan your trip. I'll help you discover authentic local experiences!
+            Start chatting to plan your trip. I&apos;ll help you discover authentic local experiences!
           </p>
         </Card>
       ) : (
@@ -214,7 +214,6 @@ export function InfoPanel({ formData }: InfoPanelProps) {
         <Card className="p-4">
           <h2 className="text-lg font-semibold mb-4">Location</h2>
           <MapView
-            location={formData.destination}
             center={formData.functionCall.data?.coordinates || [0, 0]}
             markers={[
               {
