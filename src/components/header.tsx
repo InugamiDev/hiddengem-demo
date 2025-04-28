@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import { useAuth } from "@/contexts/auth-context";
 import { AuthDialog } from "./auth/auth-dialog";
 import { useState } from "react";
+import Image from "next/image";
 
 export function Header() {
   const { user, logout } = useAuth();
@@ -19,10 +20,12 @@ export function Header() {
     <header className="border-b sticky top-0 bg-background z-50">
       <div className="container mx-auto h-16 flex items-center justify-between px-4">
         <div className="flex items-center gap-2">
-          <img 
+          <Image
             src="/favicon-32x32.png"
             alt="Hidden Gem Logo"
-            className="w-8 h-8 rounded-full"
+            width={32}
+            height={32}
+            className="rounded-full"
           />
           <h1 className="text-xl font-semibold">Hidden Gem</h1>
         </div>

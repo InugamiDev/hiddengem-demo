@@ -1,5 +1,4 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { LocalInsightCard } from "@/components/trip/local-insight-card";
 
 type ChatMessageProps = {
   message: string;
@@ -34,7 +33,7 @@ type ChatMessageProps = {
 };
 
 
-export function ChatMessage({ message, isUser, nextQuestion, onOptionSelect, functionCall }: ChatMessageProps) {
+export function ChatMessage({ message, isUser, nextQuestion, onOptionSelect }: ChatMessageProps) {
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4`}>
       <div className={`max-w-[80%] space-y-2 ${isUser ? "items-end" : "items-start"}`}>

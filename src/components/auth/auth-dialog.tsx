@@ -107,7 +107,7 @@ export function AuthDialog({ defaultMode = "login", onClose }: AuthDialogProps) 
             Continue Without Account
           </Button>
           <p className="text-gray-500 text-sm text-center mt-2">
-            Your data won't be saved
+            Your data won&apos;t be saved
           </p>
         </div>
       </Card>

@@ -1,7 +1,7 @@
-const cheerio = require('cheerio')
-const nodeFetch = require('node-fetch')
+import * as cheerio from 'cheerio'
+import nodeFetch from 'node-fetch'
 import { PrismaClient, Prisma } from '@prisma/client'
-const { GoogleGenerativeAI } = require('@google/generative-ai')
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const prisma = new PrismaClient()
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "")
@@ -86,9 +86,10 @@ async function scrapeAndAnalyze(url: string, retries: number = 3): Promise<Scrap
         console.error("Cleaned response:", cleanJson)
         return []
       }
-    } catch (error: any) {
+    } catch (error) {
       if (attempt < retries) {
-        console.warn(`Error scraping ${url}: ${error.message}. Retrying...`)
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        console.warn(`Error scraping ${url}: ${errorMessage}. Retrying...`)
         await delay(10000 * attempt)
       } else {
         console.error(`Failed to scrape ${url} after ${retries} attempts:`, error)

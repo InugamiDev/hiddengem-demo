@@ -33,7 +33,8 @@ export async function POST(req: Request) {
       }
     })
 
-    const { password: _, ...userWithoutPassword } = user
+    const { id, username: name, createdAt } = user;
+    const userWithoutPassword = { id, username: name, createdAt };
 
     return NextResponse.json(userWithoutPassword)
   } catch (error) {

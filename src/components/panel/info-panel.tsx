@@ -87,8 +87,6 @@ export function InfoPanel({ formData }: InfoPanelProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const basicInfo = ["destination", "startDate", "endDate", "budget"];
-  const preferences = ["interests", "accommodation", "transportation", "mealType", "activities"];
-  const localExp = ["avoidTouristy", "localAreas", "culturalInterests", "dietaryNeeds"];
 
   useEffect(() => {
     if (user) {
@@ -108,7 +106,14 @@ export function InfoPanel({ formData }: InfoPanelProps) {
     }
   };
 
-  const handleSaveLocation = async (location: any) => {
+  type LocationToSave = {
+    title?: string;
+    type?: string;
+    insiderTip?: string;
+    coordinates: [number, number] | { lat: number; lng: number };
+  };
+
+  const handleSaveLocation = async (location: LocationToSave) => {
     try {
       setIsLoading(true);
       const coordinates = Array.isArray(location.coordinates) 
