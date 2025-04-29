@@ -5,7 +5,17 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
-async function convertTripToCSV(tripData: any) {
+interface TripData {
+  destination: string;
+  startDate: string;
+  endDate: string;
+  budget: string;
+  transportation: string;
+  accommodation: string;
+  interests: string[];
+}
+
+async function convertTripToCSV(tripData: TripData) {
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
   const prompt = `

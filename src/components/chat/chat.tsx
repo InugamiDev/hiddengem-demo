@@ -6,7 +6,6 @@ import { ChatInput } from "./chat-input";
 import { ChatMessage } from "./chat-message";
 import { InfoPanel } from "../panel/info-panel";
 import { useAuth } from "@/contexts/auth-context";
-import { AuthDialog } from "../auth/auth-dialog";
 
 type Message = {
   message: string;
@@ -102,7 +101,6 @@ export function Chat() {
     },
   ]);
   const [formData, setFormData] = useState<TripPlanFormData>({});
-  const [showAuthDialog, setShowAuthDialog] = useState(false);
   const sessionIdRef = useRef(nanoid());
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
@@ -133,7 +131,7 @@ export function Chat() {
 
       if (data.formData || data.functionCall) {
         if (!user && shouldPromptAuth(data.formData)) {
-          setShowAuthDialog(true);
+          return; // Early return if auth is needed
         }
 
         setFormData((prev) => ({

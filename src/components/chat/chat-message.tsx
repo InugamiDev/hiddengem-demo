@@ -57,7 +57,7 @@ export function ChatMessage({
           </CardContent>
         </Card>
 
-        {!isUser && travelStage && (
+        {isUser && travelStage && (
           <div className="mt-4">
             <TripPlanner
               currentStage={travelStage.current}
