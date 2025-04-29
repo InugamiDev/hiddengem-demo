@@ -35,6 +35,12 @@ model TripPlan {
   localAreas      String[]
   culturalInterests String[]
   dietaryNeeds    String[]
+  travelStyle     String[]
+  riskConcerns    String[]
+  packingChecklist Json?
+  safetyNotes     String?   @db.Text
+  emergencyContacts Json?
+  tripStage       Int       @default(1)
   user            User?     @relation(fields: [userId], references: [id])
   userId          String?
 }

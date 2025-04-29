@@ -15,6 +15,13 @@ type Message = {
     text: string;
     options: string[];
     selectedOption?: string;
+    context?: string;
+  };
+  travelStage?: {
+    current: number;
+    name: string;
+    progress: number;
+    requirements: string[];
   };
   functionCall?: {
     type: "map";
@@ -53,6 +60,19 @@ type TripPlanFormData = {
   localAreas?: string[];
   culturalInterests?: string[];
   dietaryNeeds?: string[];
+  travelStyle?: string[];
+  riskConcerns?: string[];
+  packingChecklist?: {
+    essentials: string[];
+    destination: string[];
+    activities: string[];
+  };
+  safetyNotes?: string;
+  emergencyContacts?: {
+    local: string[];
+    international: string[];
+  };
+  tripStage?: number;
   functionCall?: {
     type: "map";
     data?: {
@@ -127,6 +147,7 @@ export function Chat() {
         message: data.response,
         isUser: false,
         nextQuestion: data.nextQuestion,
+        travelStage: data.travelStage,
         functionCall: data.functionCall,
       };
       setMessages((prev) => [...prev, newMessage]);

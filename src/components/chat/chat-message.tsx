@@ -1,4 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
+import { TripPlanner } from "../trip/trip-planner";
 
 type ChatMessageProps = {
   message: string;
@@ -7,8 +8,15 @@ type ChatMessageProps = {
     text: string;
     options: string[];
     selectedOption?: string;
+    context?: string;
   };
   onOptionSelect?: (option: string) => void;
+  travelStage?: {
+    current: number;
+    name: string;
+    progress: number;
+    requirements: string[];
+  };
   functionCall?: {
     type: "map";
     data?: {
@@ -33,7 +41,13 @@ type ChatMessageProps = {
 };
 
 
-export function ChatMessage({ message, isUser, nextQuestion, onOptionSelect }: ChatMessageProps) {
+export function ChatMessage({
+  message,
+  isUser,
+  nextQuestion,
+  onOptionSelect,
+  travelStage
+}: ChatMessageProps) {
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4`}>
       <div className={`max-w-[80%] space-y-2 ${isUser ? "items-end" : "items-start"}`}>
@@ -42,6 +56,16 @@ export function ChatMessage({ message, isUser, nextQuestion, onOptionSelect }: C
             <p className="text-sm">{message}</p>
           </CardContent>
         </Card>
+
+        {!isUser && travelStage && (
+          <div className="mt-4">
+            <TripPlanner
+              currentStage={travelStage.current}
+              progress={travelStage.progress}
+              requirements={travelStage.requirements}
+            />
+          </div>
+        )}
 
         {!isUser && nextQuestion && (
           <div className="mt-4 space-y-2">

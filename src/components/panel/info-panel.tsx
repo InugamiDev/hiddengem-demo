@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { MapView } from "@/components/map/map-view";
 import { useAuth } from "@/contexts/auth-context";
 import { Input } from "@/components/ui/input";
+import { TripPlanner } from "@/components/trip/trip-planner";
 
 const MapIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -56,6 +57,12 @@ type InfoPanelProps = {
     localAreas?: string[];
     culturalInterests?: string[];
     dietaryNeeds?: string[];
+    travelStage?: {
+      current: number;
+      name: string;
+      progress: number;
+      requirements: string[];
+    };
     functionCall?: {
       type: "map";
       data?: {
@@ -213,6 +220,17 @@ export function InfoPanel({ formData }: InfoPanelProps) {
         </Card>
       ) : (
         <div className="grid gap-3 sm:gap-4">
+          {formData.travelStage && (
+            <Card className="p-3 sm:p-4">
+              <h2 className="text-base sm:text-lg font-semibold mb-3">Trip Planning Progress</h2>
+              <TripPlanner
+                currentStage={formData.travelStage.current}
+                progress={formData.travelStage.progress}
+                requirements={formData.travelStage.requirements}
+              />
+            </Card>
+          )}
+
           <Card className="p-3 sm:p-4">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3">
               <h2 className="text-base sm:text-lg font-semibold">Basic Trip Info</h2>

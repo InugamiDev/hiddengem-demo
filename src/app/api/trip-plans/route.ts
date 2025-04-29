@@ -33,6 +33,19 @@ export async function POST(req: Request) {
         localAreas: data.localAreas || [],
         culturalInterests: data.culturalInterests || [],
         dietaryNeeds: data.dietaryNeeds || [],
+        travelStyle: data.travelStyle || [],
+        riskConcerns: data.riskConcerns || [],
+        packingChecklist: data.packingChecklist || {
+          essentials: [],
+          destination: [],
+          activities: []
+        },
+        safetyNotes: data.safetyNotes || "",
+        emergencyContacts: data.emergencyContacts || {
+          local: [],
+          international: []
+        },
+        tripStage: data.tripStage || 1,
         userId: userId.value
       }
     })
