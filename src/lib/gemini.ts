@@ -1,5 +1,4 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { TRAVEL_STAGES, RECOMMENDED_TOOLS, PACKING_TEMPLATES, SAFETY_GUIDELINES } from './travel-knowledge-base';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
