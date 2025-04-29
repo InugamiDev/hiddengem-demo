@@ -202,12 +202,7 @@ export function Chat() {
         </div>
       </div>
 
-      {showAuthDialog && !user && (
-        <AuthDialog 
-          defaultMode="register"
-          onClose={() => setShowAuthDialog(false)}
-        />
-      )}
+     
     </div>
   );
 }

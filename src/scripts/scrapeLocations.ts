@@ -19,6 +19,8 @@ type ScrapedLocation = {
   imageUrl?: string
   priceRange: string
   verified: boolean
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 const ANALYSIS_PROMPT = `Analyze this travel content and extract hidden gem locations.
@@ -31,6 +33,8 @@ For each location, provide:
 6. Best tags from: hidden gem, local, authentic, traditional, secret, off the beaten path
 7. Price range (Low, Medium, High)
 8. Coordinates (estimate based on location details)
+9. Image URL if available in the content (leave empty if none)
+10. Set verified as false by default, from the site analytic, you can set it into true
 
 Return the data ONLY as a JSON array of locations, without any markdown formatting or code blocks. Example format:
 [{
@@ -43,7 +47,9 @@ Return the data ONLY as a JSON array of locations, without any markdown formatti
   "latitude": 21.033333,
   "longitude": 105.850000,
   "tags": ["hidden gem", "local", "authentic"],
-  "priceRange": "Low"
+  "priceRange": "Low",
+  "imageUrl": "https://example.com/image.jpg",
+  "verified": false
 }]
 
 Focus only on genuine hidden gems and local spots, not tourist attractions.
@@ -65,7 +71,7 @@ async function scrapeAndAnalyze(url: string, retries: number = 3): Promise<Scrap
       const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" })
       const result = await model.generateContent([ANALYSIS_PROMPT, content])
       const analysisText = result.response.text()
-      await delay(5000 * attempt)
+      await delay(5000)
 
       const cleanJson = analysisText
         .replace(/```json\n?|\n?```/g, '')
@@ -100,7 +106,6 @@ async function scrapeAndAnalyze(url: string, retries: number = 3): Promise<Scrap
   return []
 }
 
-const sampleLocations: ScrapedLocation[] = []
 
 async function main() {
   console.log("Starting location scraper...")
@@ -174,12 +179,11 @@ async function main() {
 
   try {
     const scrapedLocationsPromises = targetUrls.map(async (url, index) => {
-      await delay(index * 500)
+      await delay(index * 5000)
       return scrapeAndAnalyze(url)
     })
     const scrapedLocationArrays = await Promise.all(scrapedLocationsPromises)
     const allLocations = [
-      ...sampleLocations,
       ...scrapedLocationArrays.flat()
     ]
 
@@ -191,7 +195,11 @@ async function main() {
     for (const location of allLocations) {
       try {
         await prisma.localInsight.create({
-          data: location
+          data: {
+            ...location,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          }
         })
         newLocations++
       } catch (e) {

@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import dynamic from "next/dynamic";
 import "leaflet/dist/leaflet.css";
-import type { Icon, LatLngExpression, LeafletMouseEvent } from "leaflet";
+import type { Icon, LatLngExpression, LeafletMouseEvent, Map as LeafletMap } from "leaflet";
 import type { MapContainerProps } from "react-leaflet";
 import { Button } from "../ui/button";
 import { useAuth } from "@/contexts/auth-context";
@@ -40,6 +40,7 @@ type MapViewProps = {
   onLocationSave?: (location: { lat: number; lng: number }) => void;
   onMarkerDelete?: (id: string) => void;
   isEditable?: boolean;
+  onMapRef?: (map: LeafletMap) => void;
 };
 
 function MapEvents({ onClick }: { onClick: (e: LeafletMouseEvent) => void }) {
@@ -49,17 +50,38 @@ function MapEvents({ onClick }: { onClick: (e: LeafletMouseEvent) => void }) {
   return null;
 }
 
-export function MapView({ 
-  center, 
-  markers = [], 
+export function MapView({
+  center,
+  markers = [],
   onLocationSave,
   onMarkerDelete,
-  isEditable = false 
+  isEditable = false,
+  onMapRef
 }: MapViewProps) {
   const [isClient, setIsClient] = useState(false);
   const [mapIcon, setMapIcon] = useState<Icon | null>(null);
   const [tempMarker, setTempMarker] = useState<LatLngExpression | null>(null);
+  const [userLocation, setUserLocation] = useState<LatLngExpression | null>(null);
   const { user } = useAuth();
+  const mapRef = useRef<LeafletMap | null>(null);
+
+  const handleMapInstance = (map: LeafletMap) => {
+    mapRef.current = map;
+    if (onMapRef) onMapRef(map);
+  };
+
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation([position.coords.latitude, position.coords.longitude]);
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+        }
+      );
+    }
+  }, []);
 
   useEffect(() => {
     setIsClient(true);
@@ -106,6 +128,7 @@ export function MapView({
         zoom={13}
         scrollWheelZoom={false}
         style={{ height: "100%", width: "100%" }}
+        ref={handleMapInstance}
         {...({} as MapContainerProps)}
       >
         <TileLayer
@@ -148,6 +171,28 @@ export function MapView({
         <div className="absolute top-2 right-2 bg-white p-2 rounded shadow-md">
           <p className="text-sm text-muted-foreground">Sign in to save locations</p>
         </div>
+      )}
+      {userLocation && (
+        <button
+          onClick={() => mapRef.current?.setView(userLocation as LatLngExpression, 13)}
+          className="absolute bottom-2 right-2 bg-white p-2 rounded shadow-md hover:bg-gray-100"
+          title="Go to my location"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </button>
       )}
     </div>
   );

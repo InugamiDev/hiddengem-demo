@@ -2,6 +2,37 @@ import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
 import { cookies } from "next/headers"
 
+export async function GET() {
+  try {
+    const cookieStore = await cookies()
+    const userId = cookieStore.get("userId")
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      )
+    }
+
+    const trips = await prisma.tripPlan.findMany({
+      where: {
+        userId: userId.value
+      },
+      orderBy: {
+        startDate: 'desc'
+      }
+    })
+
+    return NextResponse.json(trips)
+  } catch (error) {
+    console.error("Error fetching trip plans:", error)
+    return NextResponse.json(
+      { error: "Error fetching trip plans" },
+      { status: 500 }
+    )
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const cookieStore = await cookies()

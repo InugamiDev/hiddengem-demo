@@ -17,7 +17,6 @@ export function TripPlanner({ currentStage, progress, requirements }: TripPlanne
   return (
     <Card className="p-4 mb-4">
       <div className="space-y-4">
-        {/* Stage Header */}
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-semibold">
             Stage {currentStage}: {stage.name}
@@ -27,20 +26,17 @@ export function TripPlanner({ currentStage, progress, requirements }: TripPlanne
           </span>
         </div>
 
-        {/* Progress Bar */}
-        <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+=        <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
           <div
             className="bg-primary h-full transition-all duration-500"
             style={{ width: `${progress * 100}%` }}
           />
         </div>
 
-        {/* Stage Description */}
         <p className="text-sm text-muted-foreground">
           {stage.description}
         </p>
 
-        {/* Requirements List */}
         <div className="space-y-2">
           <h4 className="text-sm font-medium">Requirements:</h4>
           <ul className="space-y-1">
@@ -81,7 +77,6 @@ export function TripPlanner({ currentStage, progress, requirements }: TripPlanne
           </ul>
         </div>
 
-        {/* Stage-specific Questions */}
         <div className="space-y-2">
           <h4 className="text-sm font-medium">Key Questions:</h4>
           <ul className="list-disc list-inside space-y-1">
@@ -93,7 +88,6 @@ export function TripPlanner({ currentStage, progress, requirements }: TripPlanne
           </ul>
         </div>
 
-        {/* Stage-specific Checklist */}
         <div className="space-y-2">
           <h4 className="text-sm font-medium">Checklist:</h4>
           <ul className="list-disc list-inside space-y-1">
