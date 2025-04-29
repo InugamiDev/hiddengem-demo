@@ -6,6 +6,10 @@ const chatHistories: Record<string, Array<{ role: "user" | "assistant"; content:
 export async function POST(req: NextRequest) {
   try {
     const { message, formData, sessionId = "default" } = await req.json();
+    
+    // Check if session exists in request headers
+    const session = req.headers.get("x-session-token");
+    const isAuthenticated = !!session;
 
     if (!chatHistories[sessionId]) {
       chatHistories[sessionId] = [];
@@ -18,7 +22,8 @@ export async function POST(req: NextRequest) {
 
     const aiResponse = await generateTravelResponse(
       message,
-      formData
+      formData,
+      isAuthenticated
     );
 
     chatHistories[sessionId].push({

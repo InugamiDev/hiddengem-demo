@@ -119,6 +119,7 @@ export function Chat() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "x-session-token": user?.id || "", // Pass user ID as session token
         },
         body: JSON.stringify({
           message,
@@ -199,8 +200,6 @@ export function Chat() {
           <InfoPanel formData={formData} />
         </div>
       </div>
-
-     
     </div>
   );
 }
