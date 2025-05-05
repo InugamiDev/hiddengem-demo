@@ -147,6 +147,26 @@ export function InfoPanel({ formData }: InfoPanelProps) {
   const [allAISuggestions, setAllAISuggestions] = useState<Location[]>([]);
   const mapRef = useRef<LeafletMap | null>(null);
 
+  // Track travel stage from AI responses
+  const [travelStage, setTravelStage] = useState({
+    current: 1,
+    name: "Personal Style & Goals",
+    progress: 0,
+    requirements: ["Identify travel style", "Define goals"]
+  });
+
+  // Update travel stage when AI response includes stage info
+  useEffect(() => {
+    if (formData.travelStage) {
+      setTravelStage({
+        current: formData.travelStage.current,
+        name: formData.travelStage.name,
+        progress: formData.travelStage.progress,
+        requirements: formData.travelStage.requirements
+      });
+    }
+  }, [formData.travelStage]);
+
   // Update accumulated suggestions when new ones come in
   useEffect(() => {
     if (formData.functionCall?.data?.suggestions) {
@@ -354,9 +374,9 @@ export function InfoPanel({ formData }: InfoPanelProps) {
                 Trip Planning Progress
               </h2>
               <TripPlanner
-                currentStage={formData.travelStage.current}
-                progress={formData.travelStage.progress}
-                requirements={formData.travelStage.requirements}
+                currentStage={travelStage.current}
+                progress={travelStage.progress}
+                requirements={travelStage.requirements}
                 locations={formatSuggestionsAsLocations()}
                 onLocationSelect={(location) => {
                   if (mapRef.current) {

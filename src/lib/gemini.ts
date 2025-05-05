@@ -211,15 +211,25 @@ export async function generateTravelResponse(
   const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
   const systemPrompt = isAuthenticated ? AUTH_SYSTEM_PROMPT : GUEST_SYSTEM_PROMPT;
+  const currentStage = formData.tripStage || 1;
 
   const prompt = `
 Current trip data: ${JSON.stringify(formData)}
+Current planning stage: ${currentStage}
 
 User message: ${message}
+
+${isAuthenticated ? `
+Focus on the current travel planning stage (${currentStage}).
+Provide stage-specific guidance and requirements.
+Only advance to the next stage when current requirements are met.
+Include specific questions and suggestions for this stage.
+` : ''}
 
 Generate a response that recommends authentic local experiences and hidden gems.
 Focus on non-touristy spots and genuine cultural experiences.
 ALWAYS include the functionCall with map data and at least 6 detailed suggestions in your response.
+${isAuthenticated ? 'ALWAYS include travelStage information in the response with current stage, progress, and requirements.' : ''}
 Return ONLY the JSON response without any markdown formatting, code blocks, or additional text.
 ${JSON_RESPONSE_FORMAT}
 `;
