@@ -64,6 +64,8 @@ const SaveIcon = () => (
   </svg>
 );
 
+import { Location } from "@/types/location";
+
 type SavedLocation = {
   id: string;
   name: string;
@@ -137,12 +139,36 @@ export function InfoPanel({ formData }: InfoPanelProps) {
   const [newLocationName, setNewLocationName] = useState("");
   const [showSavedLocations, setShowSavedLocations] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [suggestions, setSuggestions] = useState<SavedLocation[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [searchSuggestions, setSearchSuggestions] = useState<SavedLocation[]>([]);
+  const [showSearchSuggestions, setShowSearchSuggestions] = useState(false);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [savedTrips, setSavedTrips] = useState<SavedTrip[]>([]);
   const [selectedTrip, setSelectedTrip] = useState<SavedTrip | null>(null);
+  const [allAISuggestions, setAllAISuggestions] = useState<Location[]>([]);
   const mapRef = useRef<LeafletMap | null>(null);
+
+  // Update accumulated suggestions when new ones come in
+  useEffect(() => {
+    if (formData.functionCall?.data?.suggestions) {
+      const newSuggestions = formData.functionCall.data.suggestions.map((suggestion, index) => ({
+        id: `suggestion-${Date.now()}-${index}`, // Use timestamp to ensure unique IDs
+        name: suggestion.title,
+        description: suggestion.description,
+        batch: Math.ceil(allAISuggestions.length / 6) + 1, // Calculate next batch number
+        coordinates: {
+          lat: suggestion.coordinates[0],
+          lng: suggestion.coordinates[1]
+        }
+      }));
+
+      setAllAISuggestions(prev => [...prev, ...newSuggestions]);
+    }
+  }, [formData.functionCall?.data?.suggestions]);
+
+  // Format all accumulated suggestions for TripPlanner
+  const formatSuggestionsAsLocations = () => {
+    return allAISuggestions;
+  };
 
   useEffect(() => {
     if ("geolocation" in navigator) {
@@ -331,6 +357,15 @@ export function InfoPanel({ formData }: InfoPanelProps) {
                 currentStage={formData.travelStage.current}
                 progress={formData.travelStage.progress}
                 requirements={formData.travelStage.requirements}
+                locations={formatSuggestionsAsLocations()}
+                onLocationSelect={(location) => {
+                  if (mapRef.current) {
+                    mapRef.current.setView(
+                      [location.coordinates.lat, location.coordinates.lng],
+                      15
+                    );
+                  }
+                }}
               />
             </Card>
           )}
@@ -452,36 +487,36 @@ export function InfoPanel({ formData }: InfoPanelProps) {
                                   loc.name.toLowerCase().includes(query) ||
                                   loc.type.toLowerCase().includes(query)
                               );
-                              setSuggestions(filtered);
-                              setShowSuggestions(true);
+                              setSearchSuggestions(filtered);
+                              setShowSearchSuggestions(true);
                             } else {
-                              setSuggestions([]);
-                              setShowSuggestions(false);
+                              setSearchSuggestions([]);
+                              setShowSearchSuggestions(false);
                             }
                           }}
                           onFocus={() => {
                             if (newLocationName.length >= 2) {
-                              setShowSuggestions(true);
+                              setShowSearchSuggestions(true);
                             }
                           }}
                           onBlur={() => {
                             // Delay hiding suggestions to allow clicking them
-                            setTimeout(() => setShowSuggestions(false), 200);
+                            setTimeout(() => setShowSearchSuggestions(false), 200);
                           }}
                           className="flex-1 text-sm pl-8"
                         />
                         <SearchIcon className="absolute left-2.5 top-2.5 text-gray-400" />
                       </div>
-                      {showSuggestions && suggestions.length > 0 && (
+                      {showSearchSuggestions && searchSuggestions.length > 0 && (
                         <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-48 overflow-y-auto">
-                          {suggestions.map((suggestion) => (
+                          {searchSuggestions.map((suggestion) => (
                             <button
                               key={suggestion.id}
                               className="w-full px-4 py-2 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                               onClick={() => {
                                 setNewLocationName(suggestion.name);
-                                setSuggestions([]);
-                                setShowSuggestions(false);
+                                setSearchSuggestions([]);
+                                setShowSearchSuggestions(false);
                                 if (mapRef.current) {
                                   mapRef.current.setView(
                                     [

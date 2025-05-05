@@ -16,7 +16,7 @@ interface TripData {
 }
 
 async function convertTripToCSV(tripData: TripData) {
-  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
   const prompt = `
     Convert this trip plan data into a detailed CSV format suitable for travel planning.
@@ -43,13 +43,13 @@ async function convertTripToCSV(tripData: TripData) {
     Day,Date,Morning,Afternoon,Evening,Notes
 
     3. Packing List
-    Category,Item,Essential,Notes
+    Type,Item,Essential,Notes
 
     4. Budget Breakdown
-    Category,Estimated Cost,Details
+    Expense,Estimated Cost,Details
 
     5. Travel Tips
-    Category,Tip,Priority
+    Topic,Tip,Priority
 
     Return only the CSV content. Make it practical and detailed based on the destination and preferences.
   `;

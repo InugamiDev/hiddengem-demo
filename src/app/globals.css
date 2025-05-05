@@ -89,10 +89,10 @@
 }
 
 @theme {
-  --color-primary: #67AE6E;
+  --color-primary: #A3D275;
   --color-primary-dark: #4E8A54;
   --color-primary-light: #85C38B;
-  --color-secondary: #90C67C;
+  --color-secondary: #9eD27C;
   --color-secondary-dark: #729F62;
   --color-secondary-light: #A9D498;
   --color-secondary-foreground: #1A3920;
@@ -108,4 +108,5 @@
   --color-warning: #F0BA41;
   --color-error: #E56B6F;
   --color-muted-foreground: #1A3920;
+  --color-card: #f6faf6;
 }

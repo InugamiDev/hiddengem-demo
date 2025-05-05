@@ -122,7 +122,7 @@ export function MapView({
   }
 
   return (
-    <div className="h-[300px] w-full rounded-lg overflow-hidden border relative">
+    <div className="z-1 h-[300px] w-full rounded-lg overflow-hidden border relative">
       <MapContainer
         center={center}
         zoom={13}
